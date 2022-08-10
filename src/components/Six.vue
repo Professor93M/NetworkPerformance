@@ -186,34 +186,49 @@ export default {
             opacity: 1
           })
         }
-      } 
-      if(this.top6){
-        let d6 = ((parseInt(this.dt6) / parseInt(this.S)) * 1000000)
-        this.delay6 = (parseFloat(d6) + parseFloat(this.T))
-        this.j6 = this.delay6
       }
-      if(this.top5){
-        let d5 = ((parseInt(this.dt5) / parseInt(this.S)) * 1000000)
-        this.delay5 = (parseFloat(d5) + parseFloat(this.T))
-        this.j5 = this.delay6 ? Math.abs((parseFloat(this.delay6) - parseFloat(this.delay5))) : 0
-      }
-      if(this.top4){
-        let d4 = ((parseInt(this.dt4) / parseInt(this.S)) * 1000000)
-        this.delay4 = (parseFloat(d4) + parseFloat(this.T))
-        this.j4 = this.delay5 ? Math.abs((parseFloat(this.delay5) - parseFloat(this.delay4))) : 0
+      let del = []
+      if(this.top2){
+        let d2 = ((parseInt(this.dt2) / parseInt(this.S)) * 1000000)
+        this.delay2 = (parseFloat(d2) + parseFloat(this.T))
+        del.push(this.delay2)
+        this.j2 = this.delay3 ? Math.abs((parseFloat(this.delay3) - parseFloat(this.delay2))) : 0
       }
       if(this.top3){
         let d3 = ((parseInt(this.dt3) / parseInt(this.S)) * 1000000)
         this.delay3 = (parseFloat(d3) + parseFloat(this.T))
+        del.push(this.delay3)
         this.j3 = this.delay4 ? Math.abs((parseFloat(this.delay4) - parseFloat(this.delay3))) : 0
       }
-      if(this.top2){
-        let d2 = ((parseInt(this.dt2) / parseInt(this.S)) * 1000000)
-        this.delay2 = (parseFloat(d2) + parseFloat(this.T))
-        this.j2 = this.delay3 ? Math.abs((parseFloat(this.delay3) - parseFloat(this.delay2))) : 0
+      if(this.top4){
+        let d4 = ((parseInt(this.dt4) / parseInt(this.S)) * 1000000)
+        this.delay4 = (parseFloat(d4) + parseFloat(this.T))
+        del.push(this.delay4)
+        this.j4 = this.delay5 ? Math.abs((parseFloat(this.delay5) - parseFloat(this.delay4))) : 0
+      }
+      if(this.top5){
+        let d5 = ((parseInt(this.dt5) / parseInt(this.S)) * 1000000)
+        this.delay5 = (parseFloat(d5) + parseFloat(this.T))
+        del.push(this.delay5)
+        this.j5 = this.delay6 ? Math.abs((parseFloat(this.delay6) - parseFloat(this.delay5))) : 0
+      }
+      if(this.top6){
+        let d6 = ((parseInt(this.dt6) / parseInt(this.S)) * 1000000)
+        this.delay6 = (parseFloat(d6) + parseFloat(this.T))
+        del.push(this.delay6)
+        this.j6 = this.delay6
       }
       this.Delay = (parseFloat(this.delay2)+parseFloat(this.delay3)+parseFloat(this.delay4)+parseFloat(this.delay5)+parseFloat(this.delay6) + parseFloat(this.Pr) + parseFloat(this.Q)).toFixed(2)
-      this.Jitter = (parseFloat(this.j2)+parseFloat(this.j3)+parseFloat(this.j4)+parseFloat(this.j5)+parseFloat(this.j6)).toFixed(2)
+      let j = []
+      for (let i=0;i <= del.length-1; i++){
+        if(i <= del.length-2){
+          j.push(Math.abs((parseFloat(del[i]) - parseFloat(del[i+1]))))
+          this.Jitter+=j[i]
+        }else{
+          j.push(parseFloat(del[i]))
+          this.Jitter+=j[i]
+        }
+      }
       // this.good = ((parseFloat(this.packet)-this.dpkt.length)/parseFloat(this.packet)).toFixed(2)
     },
     draw(){
@@ -305,7 +320,6 @@ export default {
         }else if(Sum > 12 && Sum <= 15){
             this.Quality = "<span class='text-red-700'>Very Bad</span>"
         }
-        console.log(Sum)
     },
     findY(X,x1,y1,x2,y2){
         return (X-x1)*(y2-y1)/(x2-x1)+y1
@@ -411,12 +425,12 @@ export default {
                 <th colspan="1" scope="col" class="px-2 py-3 text-center text-white">
                   Node
                 </th>
-                <th scope="col" colspan="2" class="px-2 py-3 text-center text-white">
+                <th scope="col" colspan="3" class="px-2 py-3 text-center text-white">
                   Delay
                 </th>
-                <th scope="col" colspan="1" class="px-2 py-3 text-center text-white">
+                <!-- <th scope="col" colspan="1" class="px-2 py-3 text-center text-white">
                   Jitter
-                </th>
+                </th> -->
               </tr>
             </thead>
             <tbody>
@@ -424,56 +438,56 @@ export default {
                 <th scope="row" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   N2
                 </th>
-                <td colspan="2" class="px-6 py-4 text-center">
+                <td colspan="4" class="px-6 py-4 text-center">
                   {{(delay2)}}
                 </td>
-                <td colspan="2" class="px-6 py-4 text-center">
+                <!-- <td colspan="4" class="px-6 py-4 text-center">
                   {{j2}}
-                </td>
+                </td> -->
               </tr>
               <tr v-if="top3" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" colspan="1" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   N3
                 </th>
-                <td colspan="2" class="px-6 py-4 text-center">
+                <td colspan="4" class="px-6 py-4 text-center">
                   {{(delay3)}}
                 </td>
-                <td colspan="2" class="px-6 py-4 text-center">
+                <!-- <td colspan="4" class="px-6 py-4 text-center">
                   {{j3}}
-                </td>
+                </td> -->
               </tr>
               <tr v-if="top4" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" colspan="1" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   N4
                 </th>
-                <td colspan="2" class="px-6 py-4 text-center">
+                <td colspan="4" class="px-6 py-4 text-center">
                   {{(delay4)}}
                 </td>
-                <td colspan="2" class="px-6 py-4 text-center">
+                <!-- <td colspan="4" class="px-6 py-4 text-center">
                   {{j4}}
-                </td>
+                </td> -->
               </tr>
               <tr v-if="top5" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" colspan="1" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   N5
                 </th>
-                <td colspan="2" class="px-6 py-4 text-center">
+                <td colspan="4" class="px-6 py-4 text-center">
                   {{(delay5)}}
                 </td>
-                <td colspan="2" class="px-6 py-4 text-center">
+                <!-- <td colspan="4" class="px-6 py-4 text-center">
                   {{j5}}
-                </td>
+                </td> -->
               </tr>
               <tr v-if="top6" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" colspan="1" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   N6
                 </th>
-                <td colspan="2" class="px-6 py-4 text-center">
+                <td colspan="4" class="px-6 py-4 text-center">
                   {{(delay6)}}
                 </td>
-                <td colspan="2" class="px-6 py-4 text-center">
+                <!-- <td colspan="4" class="px-6 py-4 text-center">
                   {{j6}}
-                </td>
+                </td> -->
               </tr>
               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
@@ -486,7 +500,7 @@ export default {
                   Jitter
                 </th>
                 <td class="px-6 py-4 text-center">
-                  {{((Jitter))}} m/s 
+                  {{Jitter}} m/s 
                 </td>
               </tr>
               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
