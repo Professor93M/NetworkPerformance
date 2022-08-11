@@ -418,7 +418,7 @@ export default {
             <div v-if="prop"
               :class="'prop'+p" class="w-5 h-6 rounded ring-2 ring-yellow-300 bg-red-500 absolute top-44 left-10"
             >
-              <span class="absolute -left-3 top-5">Packet Prope</span>
+              <span class="absolute -left-3 top-5">Packet Probe</span>
             </div>
           </div>
             
