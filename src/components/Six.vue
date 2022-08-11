@@ -3,14 +3,13 @@ import Input from "./Input.vue";
 import svgc from "./svgc.vue";
 import { gsap } from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin.js";
-import Fuzzy from "./Fuzzy.vue";
 
 </script>
 
 <script>
 export default {
   components:{
-    Input, svgc, Fuzzy
+    Input, svgc
   },
   data() {
     return {
@@ -46,12 +45,6 @@ export default {
       delay4: 0,
       delay5: 0,
       delay6: 0,
-
-      j2: 0,
-      j3: 0,
-      j4: 0,
-      j5: 0,
-      j6: 0,
 
       L: 0,
       R: 0,
@@ -192,31 +185,26 @@ export default {
         let d2 = ((parseInt(this.dt2) / parseInt(this.S)) * 1000000)
         this.delay2 = (parseFloat(d2) + parseFloat(this.T))
         del.push(this.delay2)
-        this.j2 = this.delay3 ? Math.abs((parseFloat(this.delay3) - parseFloat(this.delay2))) : 0
       }
       if(this.top3){
         let d3 = ((parseInt(this.dt3) / parseInt(this.S)) * 1000000)
         this.delay3 = (parseFloat(d3) + parseFloat(this.T))
         del.push(this.delay3)
-        this.j3 = this.delay4 ? Math.abs((parseFloat(this.delay4) - parseFloat(this.delay3))) : 0
       }
       if(this.top4){
         let d4 = ((parseInt(this.dt4) / parseInt(this.S)) * 1000000)
         this.delay4 = (parseFloat(d4) + parseFloat(this.T))
         del.push(this.delay4)
-        this.j4 = this.delay5 ? Math.abs((parseFloat(this.delay5) - parseFloat(this.delay4))) : 0
       }
       if(this.top5){
         let d5 = ((parseInt(this.dt5) / parseInt(this.S)) * 1000000)
         this.delay5 = (parseFloat(d5) + parseFloat(this.T))
         del.push(this.delay5)
-        this.j5 = this.delay6 ? Math.abs((parseFloat(this.delay6) - parseFloat(this.delay5))) : 0
       }
       if(this.top6){
         let d6 = ((parseInt(this.dt6) / parseInt(this.S)) * 1000000)
         this.delay6 = (parseFloat(d6) + parseFloat(this.T))
         del.push(this.delay6)
-        this.j6 = this.delay6
       }
       this.Delay = (parseFloat(this.delay2)+parseFloat(this.delay3)+parseFloat(this.delay4)+parseFloat(this.delay5)+parseFloat(this.delay6) + parseFloat(this.Pr) + parseFloat(this.Q)).toFixed(2)
       let j = []
@@ -526,6 +514,20 @@ export default {
         >
           RUN
         </button>
+
+        <div class="flex space-x-10 mt-3 items-center">
+          <label>Packets</label>
+          <Input namee="packet" @value="pkt"></Input>
+          <button @click="draw" class="bg-blue-700 ring-4 text-white px-10 h-10 rounded-lg">Draw</button>
+        </div>
+
+        <div v-if="Delay" class="flex flex-col space-y-3 w-full px-16 border-2 p-2 my-3">
+            <label class="font-semibold">Delivered Packets</label>
+            <div class="flex bg-gray-200 px-3 py-2 justify-center rounded-md text-lg"><label for="">{{dpkt.length}}</label> <span v-if="dpkt.length > 0">-{{dpkt}}</span></div>
+            <label class="font-semibold">Dropped Packets</label>
+            <div class="flex bg-gray-200 px-3 py-2 justify-center rounded-md text-lg"><label for="">{{ddpkt.length}}</label> <span v-if="dpkt.length > 0">-{{ddpkt}}</span></div>
+        </div>
+
         <div class="flex gap-x-8 justify-center items-center my-3 bg-gray-300 px-3 py-2 rounded-lg">
           <div class="rounded-md p-2 space-x-3">
             <input @click="top2 ? top2 = false : top2 = true" type="checkbox" name="top2" id="top2">
@@ -562,24 +564,10 @@ export default {
               <Input label="Distance" namee="Distance6" @value="d6" :disabled="!top6"></Input>
             </div>
           </div>
-          <div class=" rounded-md p-2 space-x-3">
-            <label for="packets">Packets</label>
-            <div>
-              <Input label="packet" namee="packet" @value="pkt"></Input>
-            </div>
-          </div>
-          <div v-if="Delay" class="flex flex-col text-center text-sm">
-            <label for="">Delivered</label>
-            <div class="flex"><label for="">{{dpkt.length}}</label> <span v-if="dpkt.length > 0">-{{dpkt}}</span></div>
-          </div>
-          <div v-if="Delay" class="flex flex-col text-center text-sm">
-            <label for="">Dropped</label>
-            <div class="flex"><label for="">{{ddpkt.length}}</label> <span v-if="dpkt.length > 0">-{{ddpkt}}</span></div>
-          </div>
-          <button @click="draw" class="bg-blue-700 ring-4 text-white py-2 px-5 rounded-lg">Draw</button>
         </div>
-        <form class="flex justify-center gap-8">
-          <div class="rounded-lg border-2 p-3 my-3">
+
+        <form class="flex justify-center gap-8 w-full">
+          <div class="rounded-lg border-2 p-3 my-3 w-1/5">
             <p class="font-bold text-center mb-2 -mt-3">Transmission Delay</p>
             <Input name="L" label="L (Length of Packet)" @value="l" />
             <Input name="R" label="R (Transmission Speed)" @value="r" />
@@ -592,12 +580,12 @@ export default {
             </p>
           </div>
 
-          <div class="rounded-lg border-2 p-3 my-3">
+          <div class="rounded-lg border-2 p-3 my-3 w-1/5">
             <p class="font-bold text-center mb-2 -mt-3">Queuing Delay</p>
             <Input name="Queuing" label="Queuing Delay" @value="q" :value="Q" />
           </div>
 
-          <div class="rounded-lg border-2 p-3 my-3">
+          <div class="rounded-lg border-2 p-3 my-3 w-1/5">
             <p class="font-bold text-center mb-2 -mt-3">Processing Delay</p>
             <Input name="Pr" label="Process Delay" @value="pr" :value="Pr" />
           </div>

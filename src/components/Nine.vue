@@ -12,6 +12,14 @@ export default {
   },
   data() {
     return {
+      Quality: "",
+      y1: 0,
+      y2: 0,
+      Lbl: [],
+      Ds: [],
+      Ts: [],
+      Gs: [],
+      Ps: [],
       packet: 0,
       dpkt: [],
       ddpkt: [],
@@ -54,8 +62,9 @@ export default {
       Pr: 0,
       Q: 0,
       Delay: 0,
-    //   svg: "M10 80 L90 30 L70 150 L250 150 L250 60",
-      svg: "M10 80",
+      Jitter: 0,
+      // good: 0,
+      svg: "M10, 80 ",
     };
   },
   methods: {
@@ -180,18 +189,6 @@ export default {
               alignOrigin: [0.5, 0.5],
             },
           });
-          // power ICon
-          gsap.registerPlugin(MotionPathPlugin);
-          gsap.to(".icon", {
-            motionPath: {
-              path: "#path",
-              autoRotate: false,
-              align: "#path",
-              ease: "power1.inOut",
-              alignOrigin: [0.5, 0.5],
-            },
-          });
-
           gsap.to(".pprop", {
             duration:1,
             delay: this.packet,
@@ -199,40 +196,60 @@ export default {
             opacity: 1
           })
         }
-      } 
+      }
+      let del = []
       if(this.top2){
-        let d2 = Math.round((parseInt(this.dt2) / parseInt(this.S)) * 100000)
-        this.delay2 = d2 + this.T + this.Pr + this.Q
+        let d2 = ((parseInt(this.dt2) / parseInt(this.S)) * 1000000)
+        this.delay2 = (parseFloat(d2) + parseFloat(this.T))
+        del.push(this.delay2)
       }
       if(this.top3){
-        let d3 = Math.round((parseInt(this.dt3) / parseInt(this.S)) * 100000)
-        this.delay3 = d3 + this.T + this.Pr + this.Q
+        let d3 = ((parseInt(this.dt3) / parseInt(this.S)) * 1000000)
+        this.delay3 = (parseFloat(d3) + parseFloat(this.T))
+        del.push(this.delay3)
       }
       if(this.top4){
-        let d4 = Math.round((parseInt(this.dt4) / parseInt(this.S)) * 100000)
-        this.delay4 = d4 + this.T + this.Pr + this.Q
+        let d4 = ((parseInt(this.dt4) / parseInt(this.S)) * 1000000)
+        this.delay4 = (parseFloat(d4) + parseFloat(this.T))
+        del.push(this.delay4)
       }
       if(this.top5){
-        let d5 = Math.round((parseInt(this.dt5) / parseInt(this.S)) * 100000)
-        this.delay5 = d5 + this.T + this.Pr + this.Q
+        let d5 = ((parseInt(this.dt5) / parseInt(this.S)) * 1000000)
+        this.delay5 = (parseFloat(d5) + parseFloat(this.T))
+        del.push(this.delay5)
       }
       if(this.top6){
-        let d6 = Math.round((parseInt(this.dt6) / parseInt(this.S)) * 100000)
-        this.delay6 = d6 + this.T + this.Pr + this.Q
+        let d6 = ((parseInt(this.dt6) / parseInt(this.S)) * 1000000)
+        this.delay6 = (parseFloat(d6) + parseFloat(this.T))
+        del.push(this.delay6)
       }
       if(this.top7){
-        let d7 = Math.round((parseInt(this.dt7) / parseInt(this.S)) * 100000)
-        this.delay7 = d7 + this.T + this.Pr + this.Q
+        let d7 = ((parseInt(this.dt7) / parseInt(this.S)) * 1000000)
+        this.delay7 = (parseFloat(d7) + parseFloat(this.T))
+        del.push(this.delay7)
       }
       if(this.top8){
-        let d8 = Math.round((parseInt(this.dt8) / parseInt(this.S)) * 100000)
-        this.delay8 = d8 + this.T + this.Pr + this.Q
+        let d8 = ((parseInt(this.dt8) / parseInt(this.S)) * 1000000)
+        this.delay8 = (parseFloat(d8) + parseFloat(this.T))
+        del.push(this.delay8)
       }
       if(this.top9){
-        let d9 = Math.round((parseInt(this.dt9) / parseInt(this.S)) * 100000)
-        this.delay9 = d9 + this.T + this.Pr + this.Q
+        let d9 = ((parseInt(this.dt9) / parseInt(this.S)) * 1000000)
+        this.delay9 = (parseFloat(d9) + parseFloat(this.T))
+        del.push(this.delay9)
       }
-      this.Delay = (this.delay2+this.delay3+this.delay4+this.delay5+this.delay6+this.delay7+this.delay8+this.delay9)
+      this.Delay = (parseFloat(this.delay2)+parseFloat(this.delay3)+parseFloat(this.delay4)+parseFloat(this.delay5)+parseFloat(this.delay6)+parseFloat(this.delay7)+parseFloat(this.delay8)+parseFloat(this.delay9) + parseFloat(this.Pr) + parseFloat(this.Q)).toFixed(2)
+      let j = []
+      for (let i=0;i <= del.length-1; i++){
+        if(i <= del.length-2){
+          j.push(Math.abs((parseFloat(del[i]) - parseFloat(del[i+1]))))
+          this.Jitter+=j[i]
+        }else{
+          j.push(parseFloat(del[i]))
+          this.Jitter+=j[i]
+        }
+      }
+      // this.good = ((parseFloat(this.packet)-this.dpkt.length)/parseFloat(this.packet)).toFixed(2)
     },
     draw(){
       this.prop = true
@@ -244,7 +261,105 @@ export default {
       this.top7 ? this.svg = this.svg + "L370, 170 " : this.svg = this.svg
       this.top8 ? this.svg = this.svg + "L480, 60 " : this.svg = this.svg
       this.top9 ? this.svg = this.svg + "L500 150 " : this.svg = this.svg
-    }
+    },
+  // Fuzzy Code +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  getY(Jitter, X){
+        this.y1 = 0; this.y2= 0;
+        if(X >= Jitter[4]){
+          X = Jitter[4];
+        }else if(X <= Jitter[0]){
+          X = Jitter[0];
+        }
+        for(let i = 0; i < Jitter.length-1 ; i++){
+            if((i == 0) &&(X >= Jitter[0] && X <= Jitter[1])){
+                this.y1 = this.findY(X, Jitter[0], 0, Jitter[1], 1)
+                this.y2 = 0
+                this.Lbl[0] = 0
+                this.Lbl[1] = 0
+                this.Lbl[2] = 0
+            }
+            if((i == Jitter.length - 2) && (X >= Jitter[Jitter.length-2] && X <= Jitter[Jitter.length-1])){
+                this.y1 = this.findY(X, Jitter[Jitter.length-1], 0, Jitter[Jitter.length - 2], 1)
+                this.y2 = 0
+                this.Lbl[0] = 0
+                this.Lbl[1] = 0
+                this.Lbl[2] = 2
+            }
+            if(X >= Jitter[i+1] && X < Jitter[i+2]){
+                this.y1 = this.findY(X, Jitter[i+1], 0, Jitter[i + 2], 1)
+                this.y2 = this.findY(X, Jitter[i+1], 1, Jitter[i + 2], 0)
+                if(i == 0){
+                    this.Lbl[0] = 0
+                    this.Lbl[1] = 1
+                    this.Lbl[2] = 0
+                }else if(i == 1){
+                    this.Lbl[0] = 0
+                    this.Lbl[1] = 1
+                    this.Lbl[2] = 2
+                }
+            }
+        }
+        return this.Lbl
+  },
+  show(){
+      // Jitter
+      let Jitter = 0;
+      Jitter = this.tringle(5, 0, 60)
+      let j1 = 0; let j2 = 0;
+      this.Js = this.getY(Jitter, parseFloat(this.Jitter))
+      // E2EDelay
+      let E2EDelay = 0;
+      E2EDelay = this.tringle(5, 0, 150)
+      let d1 = 0; let d2 = 0; let Ds = [];
+      this.Ds = this.getY(E2EDelay, this.Delay, Ds)
+      // Throughput
+      let Throughput = 0;
+      Throughput = this.tringle(5, 60, 0)
+      let th1 = 0; let th2 = 0;
+      this.Ts = this.getY(Throughput, (this.packet/this.Delay).toFixed(2))
+      // Goodput
+      let Goodput = 0;
+      Goodput = this.tringle(5, 60, 0)
+      let g1 = 0; let g2 = 0;
+      this.Gs = this.getY(Goodput, (this.dpkt.length/this.Delay).toFixed(2))
+      // PacketLoss
+      // let PacketLoss = 0;
+      // PacketLoss = this.tringle(5, 0, 60)
+      // let pl1 = 0; let pl2 = 0;
+      // this.Ps = this.getY(PacketLoss, this.Delay)
+
+      let Sum = 0;
+      for (let j = 0; j <= 2;j++){
+          Sum += this.Js[j] + this.Ds[j] + this.Ts[j] + this.Gs[j]
+      }
+      if(Sum <= 3){
+          this.Quality = "<span class='text-green-700'>Very Good</span>"
+      }else if(Sum > 3 && Sum <= 6){
+          this.Quality = "<span class='text-green-500'>Good</span>"
+      }else if(Sum > 6 && Sum <= 9){
+          this.Quality = "<span class='text-yellow-400'>Normal</span>"
+      }else if(Sum > 9 && Sum <= 12){
+          this.Quality = "<span class='text-red-400'>Bad</span>"
+      }else if(Sum > 12 && Sum <= 15){
+          this.Quality = "<span class='text-red-700'>Very Bad</span>"
+      }
+  },
+  findY(X,x1,y1,x2,y2){
+      return (X-x1)*(y2-y1)/(x2-x1)+y1
+  },
+  tringle(mem, min, max){
+      let stp = 0;
+      let arr = [];
+      stp = (max-min)/(mem-1);
+      for(let i=0;i<mem;i++){
+          if(arr.length == 0){
+              arr[0] = min;
+          }else{
+              arr[i] = arr[i-1]+stp;
+          }
+      }
+      return arr;
+  },
   },
 };
 </script>
@@ -301,175 +416,182 @@ export default {
           <img class="absolute top7" src="1.png" width="140" height="140" />
           <img class="absolute top8" src="1.png" width="140" height="140" />
           <img class="absolute top9" src="1.png" width="140" height="140" />
-          <!-- Electtric Icon ++++++++++++++ -->
-          <!-- from 1 to Others -->
-
-          <!-- <img v-if="dt2 && Delay" src="../2.png" class="absolute icon animate-pulse" alt="" width="40" height="40"> -->
-          <!-- <img v-if="dt2 && Delay" src="./2.png" class="absolute f1t2 animate-pulse" alt="" width="40" height="40">
-          <img v-if="dt3 && Delay && !dt2" src="./2.png" class="absolute f1t3 animate-pulse" alt="" width="40" height="40">
-          <img v-if="dt4 && Delay && !dt2 && !dt3" src="./2.png" class="absolute f1t4 animate-pulse" alt="" width="40" height="40">
-          <img v-if="dt5 && Delay && !dt2 && !dt3 && !dt4" src="./2.png" class="absolute f1t5 animate-pulse" alt="" width="40" height="40">
-          <img v-if="dt6 && Delay && !dt2 && !dt3 && !dt4 && !dt5" src="./2.png" class="absolute f1t6 animate-pulse" alt="" width="40" height="40">
-          <img v-if="dt7 && Delay && !dt2 && !dt3 && !dt4 && !dt5 && !dt6" src="./2.png" class="absolute f1t7 animate-pulse" alt="" width="40" height="40">
-          <img v-if="dt8 && Delay && !dt2 && !dt3 && !dt4 && !dt5 && !dt6 && !dt7" src="./2.png" class="absolute f1t8 animate-pulse" alt="" width="40" height="40">
-          <img v-if="dt9 && Delay && !dt2 && !dt3 && !dt4 && !dt5 && !dt6 && !dt7 && !dt8" src="./2.png" class="absolute f1t9 animate-pulse" alt="" width="40" height="40">
-
-          <img v-if="(dt2 && dt3) && Delay" src="./2.png" class="absolute f2t3 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt2 && dt4) && Delay && !dt3" src="./2.png" class="absolute f2t4 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt2 && dt5) && Delay && !dt3 && !dt4" src="./2.png" class="absolute f2t5 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt2 && dt6) && Delay && !dt3 && !dt4 && !dt5" src="./2.png" class="absolute f2t6 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt2 && dt7) && Delay && !dt3 && !dt4 && !dt5 && !dt6" src="./2.png" class="absolute f2t7 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt2 && dt8) && Delay && !dt3 && !dt4 && !dt5 && !dt6 && !dt7" src="./2.png" class="absolute f2t8 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt2 && dt9) && Delay && !dt3 && !dt4 && !dt5 && !dt6 && !dt7 && !dt8" src="./2.png" class="absolute f2t9 animate-pulse" alt="" width="40" height="40">
-
-          <img v-if="(dt3 && dt4) && Delay" src="./2.png" class="absolute f3t4 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt3 && dt5) && Delay && !dt4" src="./2.png" class="absolute f3t5 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt3 && dt6) && Delay && !dt4 && !dt5" src="./2.png" class="absolute f3t6 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt3 && dt7) && Delay && !dt4 && !dt5 && !dt6" src="./2.png" class="absolute f3t7 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt3 && dt8) && Delay && !dt4 && !dt5 && !dt6 && !dt7" src="./2.png" class="absolute f3t8 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt3 && dt9) && Delay && !dt4 && !dt5 && !dt6 && !dt7 && !dt8" src="./2.png" class="absolute f3t9 animate-pulse" alt="" width="40" height="40">
-
-          <img v-if="(dt4 && dt5) && Delay" src="./2.png" class="absolute f4t5 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt4 && dt6) && Delay && !dt5" src="./2.png" class="absolute f4t6 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt4 && dt7) && Delay && !dt5 && !dt6" src="./2.png" class="absolute f4t7 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt4 && dt8) && Delay && !dt5 && !dt6 && !dt7" src="./2.png" class="absolute f4t8 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt4 && dt9) && Delay && !dt5 && !dt6 && !dt7 && !dt8" src="./2.png" class="absolute f4t9 animate-pulse" alt="" width="40" height="40">
-
-          <img v-if="(dt5 && dt6) && Delay" src="./2.png" class="absolute f5t6 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt5 && dt7) && Delay && !dt6" src="./2.png" class="absolute f5t7 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt5 && dt8) && Delay && !dt6 && !dt7" src="./2.png" class="absolute f5t8 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt5 && dt9) && Delay && !dt6 && !dt7 && !dt8" src="./2.png" class="absolute f5t9 animate-pulse" alt="" width="40" height="40">
-
-          <img v-if="(dt6 && dt7) && Delay" src="./2.png" class="absolute f6t7 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt6 && dt8) && Delay && !dt7" src="./2.png" class="absolute f6t8 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt6 && dt9) && Delay && !dt7 && !dt8" src="./2.png" class="absolute f6t9 animate-pulse" alt="" width="40" height="40">
-
-          <img v-if="(dt7 && dt8) && Delay" src="./2.png" class="absolute f7t8 animate-pulse" alt="" width="40" height="40">
-          <img v-if="(dt7 && dt9) && Delay && !dt8" src="./2.png" class="absolute f7t9 animate-pulse" alt="" width="40" height="40">
-
-          <img v-if="(dt8 && dt9) && Delay" src="./2.png" class="absolute f8t9 animate-pulse" alt="" width="40" height="40"> -->
         </div>
       </div>
     </main>
 
     <header class="mt-5">
+      <div class="pprop hidden text-2xl bg-slate-100 rounded-md px-4 py-1 w-1/2 mx-auto border-2 shadow-lg">
+        <p>Quality of Service: <span class="font-bold" v-html="Quality"></span></p>
+      </div>
       <div class="flex flex-col justify-center items-center">
           <div class="pprop hidden relative mt-3 overflow-x-auto shadow-md sm:rounded-lg">
             <h1 class="font-bold text-center text-2xl mb-3">Measurements</h1>
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-                <th colspan="2" scope="col" class="px-2 py-3 text-right">
+                <th colspan="1" scope="col" class="px-2 py-3 text-center text-white">
                   Node
                 </th>
-                <th scope="col" colspan="2" class="px-2 py-3 text-right">
-                  End to End Delay
+                <th scope="col" colspan="3" class="px-2 py-3 text-center text-white">
+                  Delay
                 </th>
+                <!-- <th scope="col" colspan="1" class="px-2 py-3 text-center text-white">
+                  Jitter
+                </th> -->
               </tr>
             </thead>
             <tbody>
               <tr v-if="top2" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th colspan="3" scope="row" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                <th scope="row" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   N2
                 </th>
-                <td class="px-6 py-4">
-                  {{((delay2*10)+((dpkt.length-1)*0.1)*5)/10}}
+                <td colspan="4" class="px-6 py-4 text-center">
+                  {{(delay2)}}
                 </td>
+                <!-- <td colspan="4" class="px-6 py-4 text-center">
+                  {{j2}}
+                </td> -->
               </tr>
               <tr v-if="top3" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" colspan="3" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                <th scope="row" colspan="1" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   N3
                 </th>
-                <td class="px-6 py-4">
-                  {{((delay3*10)+((dpkt.length-1)*0.1)*5)/10}}
+                <td colspan="4" class="px-6 py-4 text-center">
+                  {{(delay3)}}
                 </td>
+                <!-- <td colspan="4" class="px-6 py-4 text-center">
+                  {{j3}}
+                </td> -->
               </tr>
               <tr v-if="top4" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" colspan="3" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                <th scope="row" colspan="1" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   N4
                 </th>
-                <td class="px-6 py-4">
-                  {{((delay4*10)+((dpkt.length-1)*0.1)*5)/10}}
+                <td colspan="4" class="px-6 py-4 text-center">
+                  {{(delay4)}}
                 </td>
+                <!-- <td colspan="4" class="px-6 py-4 text-center">
+                  {{j4}}
+                </td> -->
               </tr>
               <tr v-if="top5" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" colspan="3" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                <th scope="row" colspan="1" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   N5
                 </th>
-                <td class="px-6 py-4">
-                  {{((delay5*10)+((dpkt.length-1)*0.1)*5)/10}}
+                <td colspan="4" class="px-6 py-4 text-center">
+                  {{(delay5)}}
                 </td>
+                <!-- <td colspan="4" class="px-6 py-4 text-center">
+                  {{j5}}
+                </td> -->
               </tr>
               <tr v-if="top6" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" colspan="3" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                <th scope="row" colspan="1" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   N6
                 </th>
-                <td class="px-6 py-4">
-                  {{((delay6*10)+((dpkt.length-1)*0.1)*5)/10}}
+                <td colspan="4" class="px-6 py-4 text-center">
+                  {{(delay6)}}
                 </td>
+                <!-- <td colspan="4" class="px-6 py-4 text-center">
+                  {{j6}}
+                </td> -->
               </tr>
               <tr v-if="top7" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" colspan="3" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                <th scope="row" colspan="1" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   N7
                 </th>
-                <td class="px-6 py-4">
-                  {{((delay7*10)+((dpkt.length-1)*0.1)*5)/10}}
+                <td colspan="4" class="px-6 py-4 text-center">
+                  {{(delay7)}}
                 </td>
+                <!-- <td colspan="4" class="px-6 py-4 text-center">
+                  {{j7}}
+                </td> -->
+              </tr>
+              <tr v-if="top7" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <th scope="row" colspan="1" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                  N7
+                </th>
+                <td colspan="4" class="px-6 py-4 text-center">
+                  {{(delay7)}}
+                </td>
+                <!-- <td colspan="4" class="px-6 py-4 text-center">
+                  {{j7}}
+                </td> -->
               </tr>
               <tr v-if="top8" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" colspan="3" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                <th scope="row" colspan="1" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   N8
                 </th>
-                <td class="px-6 py-4">
-                  {{((delay8*10)+((dpkt.length-1)*0.1)*5)/10}}
+                <td colspan="4" class="px-6 py-4 text-center">
+                  {{(delay8)}}
                 </td>
+                <!-- <td colspan="4" class="px-6 py-4 text-center">
+                  {{j8}}
+                </td> -->
               </tr>
               <tr v-if="top9" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" colspan="3" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                <th scope="row" colspan="1" class="text-center px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   N9
                 </th>
-                <td class="px-6 py-4">
-                  {{((delay9*10)+((dpkt.length-1)*0.1)*5)/10}}
+                <td colspan="4" class="px-6 py-4 text-center">
+                  {{(delay9)}}
                 </td>
+                <!-- <td colspan="4" class="px-6 py-4 text-center">
+                  {{j9}}
+                </td> -->
               </tr>
               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                  End to End Delay
+                </th>
+                <td class="px-6 py-4 text-center">
+                  {{((Delay))}} m/s 
+                </td>
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   Jitter
                 </th>
                 <td class="px-6 py-4 text-center">
-                  {{(Math.random()*20).toFixed(2)}} m/s
-                </td>
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                  Throughput
-                </th> 
-                <td class="px-6 py-4 text-center">
-                  {{(L/Delay).toFixed(2)}} m/s
+                  {{Jitter}} m/s 
                 </td>
               </tr>
               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                  Delay
-                </th>
+                  Throughput
+                </th> 
                 <td class="px-6 py-4 text-center">
-                  {{((Delay*10)+4.5)/10}} m/s 
+                  {{(packet/Delay).toFixed(2)}} m/s
                 </td>
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   Goodput
                 </th>
                 <td class="px-6 py-4 text-center">
-                  {{((L/Delay).toFixed(2) - Math.random()*10).toFixed(2)}} m/s
+                  {{(dpkt.length/Delay).toFixed(2)}} m/s
                 </td>
               </tr>
             </tbody>
             </table>
-            </div>
-
+          </div>
         <button
-          @click="dd"
+          @click="dd(); show()"
           class="mt-3 text-white z-0 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs w-1/2 mx-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 select-none cursor-pointer"
         >
           RUN
         </button>
+
+        <div class="flex space-x-10 mt-3 items-center">
+          <label>Packets</label>
+          <Input namee="packet" @value="pkt"></Input>
+          <button @click="draw" class="bg-blue-700 ring-4 text-white px-10 h-10 rounded-lg">Draw</button>
+        </div>
+
+        <div v-if="Delay" class="flex flex-col space-y-3 w-full px-16 border-2 p-2 my-3">
+            <label class="font-semibold">Delivered Packets</label>
+            <div class="flex bg-gray-200 px-3 py-2 justify-center rounded-md text-lg"><label for="">{{dpkt.length}}</label> <span v-if="dpkt.length > 0">-{{dpkt}}</span></div>
+            <label class="font-semibold">Dropped Packets</label>
+            <div class="flex bg-gray-200 px-3 py-2 justify-center rounded-md text-lg"><label for="">{{ddpkt.length}}</label> <span v-if="dpkt.length > 0">-{{ddpkt}}</span></div>
+        </div>
+
         <div class="flex gap-x-8 justify-center items-center my-3 bg-gray-300 px-3 py-2 rounded-lg">
           <div class="rounded-md p-2 space-x-3">
             <input @click="top2 ? top2 = false : top2 = true" type="checkbox" name="top2" id="top2">
@@ -527,24 +649,10 @@ export default {
               <Input label="Distance" namee="Distance9" @value="d9" :disabled="!top9"></Input>
             </div>
           </div>
-          <div class=" rounded-md p-2 space-x-3">
-            <label for="packets">Packets</label>
-            <div>
-              <Input label="packet" namee="packet" @value="pkt"></Input>
-            </div>
-          </div>
-          <div v-if="Delay" class="flex flex-col text-center text-sm">
-            <label for="">Delivered</label>
-            <div class="flex"><label for="">{{dpkt.length}}</label> <span v-if="dpkt.length > 0">-{{dpkt}}</span></div>
-          </div>
-          <div v-if="Delay" class="flex flex-col text-center text-sm">
-            <label for="">Dropped</label>
-            <div class="flex"><label for="">{{ddpkt.length}}</label> <span v-if="dpkt.length > 0">-{{ddpkt}}</span></div>
-          </div>
-          <button @click="draw" class="bg-blue-700 ring-4 text-white py-2 px-5 rounded-lg">Draw</button>
         </div>
-        <form class="flex justify-center gap-8">
-          <div class="rounded-lg border-2 p-3 my-3">
+
+        <form class="flex justify-center gap-8 w-full">
+          <div class="rounded-lg border-2 p-3 my-3 w-1/5">
             <p class="font-bold text-center mb-2 -mt-3">Transmission Delay</p>
             <Input name="L" label="L (Length of Packet)" @value="l" />
             <Input name="R" label="R (Transmission Speed)" @value="r" />
@@ -557,12 +665,12 @@ export default {
             </p>
           </div>
 
-          <div class="rounded-lg border-2 p-3 my-3">
+          <div class="rounded-lg border-2 p-3 my-3 w-1/5">
             <p class="font-bold text-center mb-2 -mt-3">Queuing Delay</p>
             <Input name="Queuing" label="Queuing Delay" @value="q" :value="Q" />
           </div>
 
-          <div class="rounded-lg border-2 p-3 my-3">
+          <div class="rounded-lg border-2 p-3 my-3 w-1/5">
             <p class="font-bold text-center mb-2 -mt-3">Processing Delay</p>
             <Input name="Pr" label="Process Delay" @value="pr" :value="Pr" />
           </div>
