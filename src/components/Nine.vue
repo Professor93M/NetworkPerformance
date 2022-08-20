@@ -382,7 +382,7 @@ export default {
             <div v-if="prop"
               :class="'prop'+p" class="w-5 h-6 rounded ring-2 ring-yellow-300 bg-red-500 absolute top-40 left-20"
             >
-              <span class="absolute -left-3 top-5">Packet Prope</span>
+              <span class="absolute -left-3 top-5">Packet Probe</span>
             </div>
           </div>
             
@@ -552,7 +552,7 @@ export default {
                   Jitter
                 </th>
                 <td class="px-6 py-4 text-center">
-                  {{Jitter}} m/s 
+                  {{Jitter.toFixed(2)}} m/s 
                 </td>
               </tr>
               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">

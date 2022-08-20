@@ -19,11 +19,11 @@
 
                         <p class="font-[Caveat] text-2xl mt-4 select-none hover:text-red-400 hover:text-3xl transition-all duration-500">
                             Student
-                            <span class="block">Jawad Kadum Hussein</span>
+                            <span class="block text-xl">Jawad Kadum Hussein</span>
                         </p>
-                        <p class="font-[Caveat] text-2xl mt-4 select-none hover:text-red-400 hover:text-3xl transition-all duration-500">.......... Supervisor:
-                            Asst.Prof. Dr .Khulood Ahmed Nassar
-                            ..............
+                        <p class="font-[Caveat] text-2xl mt-4 select-none hover:text-red-400 hover:text-3xl transition-all duration-500">
+                            Supervisor
+                            <span class="block text-xl">Asst.Prof. Dr .Khulood Ahmed Nassar</span>
                         </p>
                     </div>
                 </div>
