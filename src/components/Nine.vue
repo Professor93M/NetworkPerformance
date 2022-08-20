@@ -399,14 +399,14 @@ export default {
           <label class="absolute t7 text-white font-bold">N7</label>
           <label class="absolute t8 text-white font-bold">N8</label>
           <label class="absolute t9 text-white font-bold">N9</label>
-          <label v-if="delay2" class="absolute dt2">{{delay2}} m/s</label>
+          <!-- <label v-if="delay2" class="absolute dt2">{{delay2}} m/s</label>
           <label v-if="delay3" class="absolute dt3">{{delay3}} m/s</label>
           <label v-if="delay4" class="absolute dt5">{{delay4}} m/s</label>
           <label v-if="delay5" class="absolute dt4">{{delay5}} m/s</label>
           <label v-if="delay6" class="absolute dt6">{{delay6}} m/s</label>
           <label v-if="delay7" class="absolute dt7">{{delay7}} m/s</label>
           <label v-if="delay8" class="absolute dt8">{{delay8}} m/s</label>
-          <label v-if="delay9" class="absolute dt9">{{delay9}} m/s</label>
+          <label v-if="delay9" class="absolute dt9">{{delay9}} m/s</label> -->
           <img class="absolute top1 z-10" src="1.png" width="140" height="140" />
           <img class="absolute top2" src="1.png" width="140" height="140" />
           <img class="absolute top3" src="1.png" width="140" height="140" />

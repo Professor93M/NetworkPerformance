@@ -360,11 +360,11 @@ export default {
           <label class="absolute t5 text-white font-bold">N4</label>
           <label class="absolute t4 text-white font-bold">N5</label>
           <label class="absolute t6 text-white font-bold">N6</label>
-          <label v-if="delay2" class="absolute dt2">{{delay2}} m/s</label>
+          <!-- <label v-if="delay2" class="absolute dt2">{{delay2}} m/s</label>
           <label v-if="delay3" class="absolute dt3">{{delay3}} m/s</label>
           <label v-if="delay4" class="absolute dt5">{{delay4}} m/s</label>
           <label v-if="delay5" class="absolute dt4">{{delay5}} m/s</label>
-          <label v-if="delay6" class="absolute dt6">{{delay6}} m/s</label>
+          <label v-if="delay6" class="absolute dt6">{{delay6}} m/s</label> -->
           <img class="absolute top1 z-10" src="1.png" width="140" height="140" />
           <img class="absolute top2" src="1.png" width="140" height="140" />
           <img class="absolute top3" src="1.png" width="140" height="140" />
