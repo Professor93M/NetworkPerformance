@@ -200,42 +200,42 @@ export default {
       let del = []
       if(this.top2){
         let d2 = ((parseInt(this.dt2) / parseInt(this.S)) * 1000000)
-        this.delay2 = (parseFloat(d2) + parseFloat(this.T))
+        this.delay2 = (parseFloat(d2) + parseFloat(this.T)).toFixed(2)
         del.push(this.delay2)
       }
       if(this.top3){
         let d3 = ((parseInt(this.dt3) / parseInt(this.S)) * 1000000)
-        this.delay3 = (parseFloat(d3) + parseFloat(this.T))
+        this.delay3 = (parseFloat(d3) + parseFloat(this.T)).toFixed(2)
         del.push(this.delay3)
       }
       if(this.top4){
         let d4 = ((parseInt(this.dt4) / parseInt(this.S)) * 1000000)
-        this.delay4 = (parseFloat(d4) + parseFloat(this.T))
+        this.delay4 = (parseFloat(d4) + parseFloat(this.T)).toFixed(2)
         del.push(this.delay4)
       }
       if(this.top5){
         let d5 = ((parseInt(this.dt5) / parseInt(this.S)) * 1000000)
-        this.delay5 = (parseFloat(d5) + parseFloat(this.T))
+        this.delay5 = (parseFloat(d5) + parseFloat(this.T)).toFixed(2)
         del.push(this.delay5)
       }
       if(this.top6){
         let d6 = ((parseInt(this.dt6) / parseInt(this.S)) * 1000000)
-        this.delay6 = (parseFloat(d6) + parseFloat(this.T))
+        this.delay6 = (parseFloat(d6) + parseFloat(this.T)).toFixed(2)
         del.push(this.delay6)
       }
       if(this.top7){
         let d7 = ((parseInt(this.dt7) / parseInt(this.S)) * 1000000)
-        this.delay7 = (parseFloat(d7) + parseFloat(this.T))
+        this.delay7 = (parseFloat(d7) + parseFloat(this.T)).toFixed(2)
         del.push(this.delay7)
       }
       if(this.top8){
         let d8 = ((parseInt(this.dt8) / parseInt(this.S)) * 1000000)
-        this.delay8 = (parseFloat(d8) + parseFloat(this.T))
+        this.delay8 = (parseFloat(d8) + parseFloat(this.T)).toFixed(2)
         del.push(this.delay8)
       }
       if(this.top9){
         let d9 = ((parseInt(this.dt9) / parseInt(this.S)) * 1000000)
-        this.delay9 = (parseFloat(d9) + parseFloat(this.T))
+        this.delay9 = (parseFloat(d9) + parseFloat(this.T)).toFixed(2)
         del.push(this.delay9)
       }
       this.Delay = (parseFloat(this.delay2)+parseFloat(this.delay3)+parseFloat(this.delay4)+parseFloat(this.delay5)+parseFloat(this.delay6)+parseFloat(this.delay7)+parseFloat(this.delay8)+parseFloat(this.delay9) + parseFloat(this.Pr) + parseFloat(this.Q)).toFixed(2)

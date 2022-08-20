@@ -17,9 +17,14 @@
                             12 Nodes Test
                         </router-link>
 
+                        <p class="font-[Caveat] text-2xl mt-4 select-none hover:text-red-400 hover:text-3xl transition-all duration-500">
+                            Student
+                            <span class="block">Jawad Kadum Hussein</span>
+                        </p>
                         <p class="font-[Caveat] text-2xl mt-4 select-none hover:text-red-400 hover:text-3xl transition-all duration-500">.......... Supervisor:
-Asst.Prof. Dr .Khulood Ahmed Nassar
-  .............. </p>
+                            Asst.Prof. Dr .Khulood Ahmed Nassar
+                            ..............
+                        </p>
                     </div>
                 </div>
             </div>
